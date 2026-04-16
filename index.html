@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edebiyat 2 İnteraktif Sınav Rehberi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 50%, #e0e7ff 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+        main {
+            flex: 1;
+        }
+        .tab-active {
+            border-bottom: 3px solid #6366f1;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+        .tab-btn:hover {
+            color: #4f46e5;
+            background: rgba(99, 102, 241, 0.05);
+        }
+        .option-btn {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: #eef2ff;
+            border-color: #818cf8;
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+        }
+        .option-btn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        .correct-answer {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+        }
+        .wrong-answer {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+        }
+        .content-card {
+            background: linear-gradient(145deg, #ffffff 0%, #fafbff 100%);
+            border-left: 4px solid #6366f1;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .content-card:hover {
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.12);
+            transform: translateY(-2px);
+        }
+        .past-exam-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            padding: 0.35rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            border: 1px solid #fcd34d;
+            box-shadow: 0 2px 6px rgba(251, 191, 36, 0.3);
+        }
+        .quiz-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
+            transition: all 0.3s ease;
+        }
+        .quiz-card:hover {
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.1);
+        }
+        .header-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .pulse-badge {
+            animation: pulse-soft 2s infinite;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a5b4fc;
+        }
+        @media (max-width: 768px) {
+            .content-card {
+                padding: 1rem;
+                border-radius: 0.75rem;
+            }
+            .quiz-card {
+                padding: 1rem !important;
+                border-radius: 0.75rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <!-- Header -->
+    <header class="header-gradient shadow-lg py-4 md:py-6 sticky top-0 z-50 backdrop-blur-lg bg-white/95">
+        <div class="max-w-6xl mx-auto px-3 md:px-4 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <i class="fas fa-book-open text-white text-xl md:text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Türk dili II Sınav Rehberi</h1>
+                    <p class="text-gray-500 text-xs md:text-sm mt-0.5">İyi çalışmalar <span class="pulse-badge inline-block">✨</span></p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 text-xs md:text-sm font-semibold px-3 md:px-4 py-2 rounded-full border border-indigo-200 shadow-sm">Vize / Final Hazırlık</span>
+                <span class="bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 text-xs font-bold px-3 py-1.5 rounded-full pulse-badge">📚 50 Soru</span>
+            </div>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <div class="max-w-6xl mx-auto px-3 md:px-4 mt-4 md:mt-6 flex overflow-x-auto scrollbar-hide">
+            <button onclick="switchTab('notes')" id="btn-notes" class="tab-btn tab-active pb-3 px-4 md:px-6 text-sm md:text-base text-gray-600 focus:outline-none whitespace-nowrap flex items-center gap-2">
+                <i class="fas fa-file-alt"></i><span class="hidden sm:inline">Ansiklopedik</span> Konu Anlatımı
+            </button>
+            <button onclick="switchTab('quiz')" id="btn-quiz" class="tab-btn pb-3 px-4 md:px-6 text-sm md:text-base text-gray-600 focus:outline-none whitespace-nowrap flex items-center gap-2">
+                <i class="fas fa-tasks"></i>İnteraktif <span class="hidden sm:inline">Test </span>Soru
+            </button>
+            <button onclick="switchTab('audio')" id="btn-audio" class="tab-btn pb-3 px-4 md:px-6 text-sm md:text-base text-gray-600 focus:outline-none whitespace-nowrap flex items-center gap-2">
+                <i class="fas fa-headphones"></i>Sesli Özet
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto w-full px-3 md:px-4 py-6 md:py-8">
+        
+        <!-- TAB 1: KONU ANLATIMI (GENİŞLETİLMİŞ) -->
+        <div id="tab-notes" class="block animate-fade-in">
+            <div class="bg-white rounded-2xl shadow-lg p-5 md:p-10 mb-6 md:mb-8 border border-gray-100">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">EDEBİYAT 2: Kapsamlı Konu Anlatımı ve Sınav Rehberi</h2>
+                <p class="text-gray-500 mb-8 border-b pb-4">Bu rehber; Kompozisyon, Tiyatro, Hikâye-Roman, Şiir ve Destan konularını tüm detaylarıyla, tarihsel arka planlarıyla ve sınavda hayat kurtaracak kritik noktalar eşliğinde senin için derinlemesine özetlemektedir. Bilgileri ezberlemek yerine mantığını kavramaya odaklanın.</p>
+                
+                <!-- Section 1 -->
+                <div class="mb-8 md:mb-12">
+                    <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-4 md:mb-6 flex items-center gap-2"><span class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-lg md:text-xl shadow-lg"><i class="fas fa-pen-nib"></i></span>1. BÖLÜM: KOMPOZİSYON VE YAZI TÜRLERİ</h3>
+                    
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">A. Düşünceyi Geliştirme Yolları</h4>
+                        <p class="text-gray-700 mb-3">Yazarın, savunduğu tezi okura kabul ettirmek, metnin inandırıcılığını artırmak ve soyut fikirleri somut bir zemine oturtmak için başvurduğu stratejik yöntemlerdir:</p>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>Tanımlama:</strong> Bir kavramın, varlığın veya durumun ne olduğunu kesin sınırlarla çizen cümlelerdir. Kısaca "Bu nedir?" sorusunun net cevabıdır. Öznel ya da nesnel olabilir. (Örn: "Şiir, kelimelerin ruhumuzda bıraktığı ahenkli bir melodidir." veya nesnel olarak "Su, iki hidrojen ve bir oksijen atomundan oluşan renksiz bir sıvıdır.")</li>
+                            <li><strong>Örneklendirme:</strong> İleri sürülen soyut ve teorik bir düşünceyi, okurun zihninde canlandırmak için somut isimler, olaylar veya eserler sunmaktır. Düşüncenin ete kemiğe bürünmüş halidir.</li>
+                            <li><strong>Tanık Gösterme (Alıntı Yapma):</strong> Yazarın, kendi fikrini desteklemek için o alanda otorite kabul edilen, uzman ve tanınmış bir kişinin sözünü (genellikle tırnak içinde) aynen alıntılamasıdır. Sadece isim vermek örneklendirmedir; kişinin sözünü paylaşmak ise tanık göstermektir.</li>
+                            <li><strong>İstatistiksel Verilerden Yararlanma:</strong> Düşünceyi matematiksel bir kesinlikle kanıtlamak için anket sonuçlarını, bilimsel araştırma verilerini, grafiksel rakamları ve % (yüzde) ifadelerini kullanmaktır. Özellikle makale türünün belkemiğidir.</li>
+                            <li><strong>Karşılaştırma:</strong> İki farklı kavramın, eserin veya durumun benzer ya da zıt yönlerini aynı potada eriterek kıyaslamaktır. "Daha, en, kadar, ise" gibi bağlaç ve edatlar sıkça kullanılır.</li>
+                            <li><strong>Benzetme:</strong> Bir kavramın, nesnenin başka bir kavram ve nesnenin özellikleriyle (genellikle güçlü olandan zayıf olana doğru) anlatılmasıdır. Metne edebi bir lezzet katar.</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">B. Resmî Yazılar</h4>
+                        <p class="text-gray-700 mb-3">Bu yazılar, devletin soğuk ve ciddi yüzünü yansıtır. Tamamen nesnel, kuralcı ve yoruma kapalı metinlerdir.</p>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>Dilekçe:</strong> Vatandaşların kurumlara istek, şikayet veya durum bildirmek için yazdığı resmi mektuplardır.
+                                <ul class="list-[circle] pl-6 mt-2 space-y-1">
+                                    <li>Mutlaka çizgisiz beyaz A4 kâğıda yazılır. Yıpranmış, karalanmış kâğıtlar kabul edilmez.</li>
+                                    <li>Hitap edilen makam adı büyük harflerle (veya kelimelerin ilk harfleri büyük) yazılır, makam isminde kesinlikle kısaltma yapılmaz.</li>
+                                    <li>Hiyerarşi çok önemlidir:
+                                        <ul class="list-[square] pl-6 mt-1 space-y-1">
+                                            <li><strong>Alt makam, üst makama yazarken:</strong> (Örn: Memurun müdüre) "Arz ederim" ifadesini kullanır.</li>
+                                            <li><strong>Üst makam, alt makama yazarken:</strong> (Örn: Müdürün memura) "Rica ederim" ifadesini kullanır.</li>
+                                        </ul>
+                                    </li>
+                                    <li>Vatandaşlar kurumlara her zaman "arz ederim" der.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Tutanak (Zabıt):</strong> Herhangi bir olayın (toplantı, kaza, suç, kopya vb.) ortaya çıkışını, anlık veya olaydan hemen sonraki durumunu olduğu gibi, şahitler eşliğinde yazıya geçirip imza altına alan belgedir. Yorum, duygu veya abartı içermez; adeta olayın fotoğrafını kelimelerle çeker.</li>
+                            <li><strong>Öz geçmiş (CV / Curriculum Vitae):</strong> Kişinin iş başvurularında kurumlara sunduğu; kişisel bilgilerini, eğitim geçmişini, iş tecrübelerini, katıldığı seminerleri, sertifikalarını ve referanslarını içeren özet belgedir. Gelecek planları, umutlar, hayaller ve soyut hedefler öz geçmişin ciddiyetini bozar ve burada yer almaz; yalnızca geçmişe ve bugüne ait kanıtlanabilir, somut verilerden oluşmalıdır.</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">C. Fikrî Yazılar ve Anlatım Biçimleri</h4>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>Makale:</strong> Bir düşünceyi kanıtlamak, okuru bilgilendirmek ve bilimsel bir gerçeği ortaya koymak amacıyla yazılır. Dili son derece ciddidir, nesneldir, akademik terimler barındırır. Açıklayıcı ve kanıtlayıcı anlatım kullanılır; asla olay örgüsüne dayalı öyküleyici anlatıma yer verilmez. Kaynakça (bibliyografya) barındırması onu diğer türlerden ayırır.</li>
+                            <li><strong>Fıkra (Köşe Yazısı):</strong> Gazete ve dergilerin belirli köşelerinde yayımlanan, güncel, siyasi veya toplumsal olayları kanıtlama amacı gütmeden, yazarın tamamen kendi penceresinden samimi bir sohbet havasında anlattığı yazılardır. Ömrü kısadır (günübirliktir), yarın okunduğunda etkisini yitirebilir.</li>
+                            <li><strong>Tartışmacı Anlatım:</strong> Yazarın, toplumda veya edebiyat dünyasında var olan bir fikrin yanlış olduğunu ispatlayıp, kendi fikrini okura kabul ettirme (eski fikri çürütme) çabasıdır. Metinde gizli bir gerilim, soru-cevaplı, provokatif ve son derece canlı bir üslup vardır.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="mb-8 md:mb-12">
+                    <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-4 md:mb-6 flex items-center gap-2"><span class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-lg md:text-xl shadow-lg"><i class="fas fa-theater-masks"></i></span>2. BÖLÜM: TİYATRO</h3>
+                    <p class="text-gray-700 mb-4">Tiyatro; sahnede seyirci önünde oynanmak üzere yazılan, aksiyona dayalı, edebiyatın göze ve kulağa hitap eden en canlı, en nefes alan dalıdır.</p>
+                    
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">A. Geleneksel Türk Tiyatrosu</h4>
+                        <p class="text-gray-700 mb-3">Batı tiyatrosu ülkemize gelmeden önce asırlarca halkı eğlendiren tiyatro geleneğimizdir. Modern tiyatrodan en büyük farkı yazılı bir metne dayanmaması ve sahnede anlık olarak doğaçlama (tuluat) sergilenmesidir. Şarkı, türkü, şive taklitleri ve yanlış anlaşılmalar komedinin temelini oluşturur. Modern sahneler, dekorlar veya kostümler yerine basit araçlar kullanılır.</p>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>Karagöz:</strong> Deriden kesilmiş tasvirlerin (şekillerin) arkadan ışıklandırılarak beyaz bir perdeye yansıtılmasıyla oynanan gölge oyunudur. (Bu perdeye Küşteri Meydanı da denir). Temelinde Osmanlı toplumundaki sınıf ve eğitim çatışması yatar. 4 bölümden oluşur (Mukaddime, Muhavere, Fasıl, Bitiş).
+                                <ul class="list-[circle] pl-6 mt-2 space-y-1">
+                                    <li><strong>Karagöz:</strong> Eğitimsiz, cahil ama sokak zekasına sahip, dobra ve patavatsız halk adamını temsil eder. Söylenenleri hep yanlış anlar ve komediyi başlatır.</li>
+                                    <li><strong>Hacivat:</strong> Medrese eğitimi almış, yarı aydın, gösterişi seven, Osmanlıca kelimeler ve süslü laflar kullanan okumuş, elit kişiyi temsil eder.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Orta Oyunu:</strong> Karagöz gölge oyununun perdeden inip, gerçek oyuncularla "Palanga" adı verilen yuvarlak bir meydanda seyircilerin ortasında oynanan halidir. Kavramlar ve işleyiş Karagöz ile birebir aynıdır.
+                                <ul class="list-[circle] pl-6 mt-2 space-y-1">
+                                    <li><strong>Kavuklu:</strong> Karagöz'ün gerçek insana bürünmüş, eğitimsiz ama komik karşılığıdır.</li>
+                                    <li><strong>Pişekâr:</strong> Hacivat'ın gerçek insana bürünmüş, eğitimli ve yönlendirici karşılığıdır.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Meddah:</strong> Tek kişilik bir temaşa (gösteri) ve hikâye anlatma sanatıdır. Günümüzün "Stand-up" gösterilerinin atasıdır. Meddah, yüksekçe bir sandalyeye oturur; sadece elindeki bir baston (sopası) ve omuzundaki bir mendil (makreme) ile çeşitli şive taklitleri yaparak (kadın, çocuk, yaşlı, sarhoş) koca bir kalabalığı tek başına canlandırır.</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">B. Modern Türk Tiyatrosu ve Klasik Türler</h4>
+                        <p class="text-gray-700 mb-3">Modern tiyatro edebiyatımıza Tanzimat Dönemi'nde (19. yüzyılın ikinci yarısında) Batı'dan çeviriler ve uyarlamalar yoluyla girmiştir.</p>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>İlklerimiz:</strong>
+                                <ul class="list-[circle] pl-6 mt-2 space-y-1">
+                                    <li>Batılı anlamda edebiyatımızda yazılan <strong>ilk tiyatro eseri:</strong> Şinasi - Şair Evlenmesi. Bu eser bir töre komedisidir ve dönemin kanayan yarası olan "görücü usulü evliliğin" sakıncalarını eleştirir.</li>
+                                    <li>Sahnelenen <strong>ilk tiyatro eseri:</strong> Namık Kemal - Vatan Yahut Silistre. Bu eser komedi değil, vatan sevgisini ve askerlerin fedakarlığını işleyen heyecan verici bir dramdır.</li>
+                                </ul>
+                            </li>
+                            <li class="mt-4"><strong>Klasik Tiyatro Türleri:</strong>
+                                <ul class="list-[circle] pl-6 mt-2 space-y-1">
+                                    <li><strong>Trajedi (Tragedya):</strong> Antik Yunan'da doğan, hayatın sadece acıklı, korkunç ve ciddi yönlerini sahneleyen türdür. <strong>Amacı:</strong> Seyircide "korku ve merhamet" hisleri uyandırarak ruhsal bir arınma (katharsis) sağlamaktır. Kahramanlar sıradan insanlar değil; krallar, kraliçeler, soylular veya tanrılardır. Vurma, yaralama, öldürme gibi çirkin sahneler seyirciye doğrudan gösterilmez, sahne arkasından duyurulur. Katı bir "Üç Birlik Kuralı" (tek mekân, tek gün, tek ana olay) uygulanır.</li>
+                                    <li><strong>Komedi:</strong> Hayatın, toplumun ve insanların gülünç yönlerini eksikliklerini göstererek izleyiciyi güldürürken düşündürmeyi amaçlar. Karakter komedisi, töre komedisi ve entrika komedisi gibi alt dalları vardır.</li>
+                                    <li><strong>Dram:</strong> Romantizm akımıyla birlikte Trajedinin katı kurallarına (üç birlik kuralı, soylu kahramanlar) isyan ederek ortaya çıkmıştır. Hayatın tıpkı gerçekte olduğu gibi hem acıklı hem de gülünç yönlerini iç içe sahneler. Kahramanlar her kesimden insan olabilir; çirkin olaylar sahnede gösterilebilir.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Section 3 -->
+                <div class="mb-8 md:mb-12">
+                    <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-4 md:mb-6 flex items-center gap-2"><span class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-lg md:text-xl shadow-lg"><i class="fas fa-book"></i></span>3. BÖLÜM: HİKÂYE (ÖYKÜ) VE ROMAN</h3>
+                    
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">A. Hikâye ve Romanın Farkları</h4>
+                        <p class="text-gray-700 mb-3">Her ikisi de kurgusal metinlerdir ancak yapısal olarak birbirlerinden farklı deneyimler sunarlar:</p>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>Hikâye (Öykü):</strong> Kısa metrajlı bir film veya bir fotoğraf karesi gibidir. Genellikle tek bir ana olay veya durum etrafında şekillenir. Kişi kadrosu oldukça dardır. Karakterler uzun uzadıya psikolojik analizlerle tanıtılmaz, sadece o anki olayı ilgilendiren belirgin özellikleri verilir. Mekân kısıtlıdır ve zaman dilimi dardır. Okuyucuyu yormayan, yoğun ve çarpıcı bir etkisi vardır.</li>
+                            <li><strong>Roman:</strong> Uzun metrajlı, karmaşık bir dizidir. Tek bir olay değil, birbirine zincirleme bağlı geniş bir olaylar ağı vardır. Kişi kadrosu bir kasabayı dolduracak kadar kalabalık olabilir. Karakterler derinlemesine, tüm psikolojik çıkmazları, geçmişleri ve fiziksel özellikleriyle tahlil edilir. Çevre ve mekan betimlemeleri sayfalarca sürebilir.</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">B. Öykü Türleri</h4>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>1. Olay (Klasik / Maupassant) Öyküsü:</strong> Geleneksel yapıyı benimser. Olaylar "serim (giriş) - düğüm (çatışma/gelişme) - çözüm (sonuç)" planına sadık kalarak, mantıklı bir neden-sonuç ilişkisiyle ilerler. Merak unsuru en üst seviyededir; okur sürekli "Acaba şimdi ne olacak?" diye düşünür. Genellikle çarpıcı ve sürpriz bir sonla biter. Yazar tıpkı bir tanrı gibi olayların öncesini ve sonrasını bilir.
+                                <ul class="list-[circle] pl-6 mt-2 space-y-1">
+                                    <li>Dünyadaki kurucusu: Fransız yazar Guy de Maupassant.</li>
+                                    <li>Türk Edebiyatındaki en büyük temsilcisi: <strong>Ömer Seyfettin</strong> (Kaşağı, Forsa, Pembe İncili Kaftan gibi eserleriyle bu türü zirveye taşımıştır).</li>
+                                </ul>
+                            </li>
+                            <li><strong>2. Durum (Kesit / Çehov) Öyküsü:</strong> Serim, düğüm, çözüm planını reddeder. Belli ve çarpıcı bir olayı değil, hayatın sıradan ve anlık bir kesitini okura sunar. Hikayenin belirgin bir başlangıcı ve net bir sonu (çözümü) yoktur, metin bittiğinde hikaye okurun hayal gücünde devam eder. Merak unsuru yerine duygu, atmosfer ve psikoloji ön plandadır.
+                                <ul class="list-[circle] pl-6 mt-2 space-y-1">
+                                    <li>Dünyadaki kurucusu: Rus yazar Anton Çehov.</li>
+                                    <li>Türk Edebiyatındaki öncüleri: <strong>Memduh Şevket Esendal</strong> ve Sait Faik Abasıyanık.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card bg-gradient-to-br from-yellow-50 to-amber-50 border-l-4 border-l-amber-400">
+                        <h4 class="text-lg font-bold text-yellow-800 mb-3">C. Edebiyatımızda Bazı "İlk"ler (Tanzimat ve Sonrası)</h4>
+                        <ul class="list-disc pl-6 space-y-2 text-yellow-900">
+                            <li><strong>İlk yerli roman:</strong> Taaşşuk-ı Talat ve Fitnat (Şemsettin Sami - Batı tekniğine göre kusurlu olsa da bir mihenk taşıdır).</li>
+                            <li><strong>İlk köy romanı:</strong> Karabibik (Nabizade Nazım - Anadolu köylüsünün gerçekçi yaşamını ilk kez edebiyata sokmuştur).</li>
+                            <li><strong>Psikolojik roman türünün şaheseri:</strong> Dokuzuncu Hariciye Koğuşu (Peyami Safa - Hastane koridorlarındaki bir çocuğun psikolojisini efsanevi bir şekilde işler. Dikkat: Reşat Nuri'ye ait değildir!).</li>
+                            <li><strong>Batılı anlamda teknik olarak ilk modern hikâye kitabı:</strong> Küçük Şeyler (Samipaşazade Sezai).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Section 4 -->
+                <div class="mb-8 md:mb-12">
+                    <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-4 md:mb-6 flex items-center gap-2"><span class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-lg md:text-xl shadow-lg"><i class="fas fa-feather-alt"></i></span>4. BÖLÜM: ŞİİR BİLGİSİ VE GELENEKLERİ</h3>
+                    
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">A. Ahenk Unsurları</h4>
+                        <p class="text-gray-700 mb-3">Şiiri düz yazıdan ayıran en önemli şey müzikalitesidir. Bu müzikalite dize sonlarındaki ses tekrarlarıyla sağlanır:</p>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>Redif:</strong> Mısra sonlarında bulunan, yazılışları, okunuşları, anlamları ve görevleri (aynı ek veya aynı kelime olması koşuluyla) TAMAMEN AYNI olan ses, kelime ya da kelime gruplarıdır. Kafiyeden önce mutlaka redif aranır.</li>
+                            <li><strong>Kafiye (Uyak):</strong> Şiirin müzikal yükünü çeken asıl unsurdur. Mısra sonlarında yazılışları aynı ancak anlamları ve görevleri (kökleri farklı, türleri farklı) FARKLI olan ses benzerlikleridir.
+                                <ul class="list-[circle] pl-6 mt-2 space-y-1">
+                                    <li><strong>Yarım Uyak:</strong> Yalnızca tek bir sesin (harfin) benzeşmesidir (Genellikle halk şiirinde, bağlama eşliğinde söylendiği için yeterli görülmüştür).</li>
+                                    <li><strong>Tam Uyak:</strong> İki sesin (bir ünlü, bir ünsüz) benzeşmesidir.</li>
+                                    <li><strong>Zengin Uyak:</strong> Üç veya daha fazla sesin benzeşmesidir. Divan şiirinin favorisidir.</li>
+                                    <li><strong>Cinaslı Uyak:</strong> Sesteş kelimelerle yapılır. Yazılışı ve okunuşu tamamen aynı, ancak anlamı birbirinden tamamen farklı iki kelimenin dize sonlarında kullanılmasıdır (Örn: Çiçek olan "Gül" ile eylem olan "Gülmek").</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">B. Şiir Gelenekleri</h4>
+                        <p class="text-gray-700 mb-3">Türk edebiyatında iki devasa gelenek yüzyıllar boyunca yan yana yaşamıştır:</p>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>Halk Şiiri:</strong> Sözlü geleneğe dayanır. Şairler (aşıklar, ozanlar) şiirlerini saz eşliğinde söylerler. Nazım birimi dörtlüktür (kıtalar halinde yazılır). Türkçenin doğal ritmi olan Hece ölçüsü (hece sayılarının eşitliği) kullanılır. Dil son derece sade, Anadolu insanının konuştuğu pürüzsüz Türkçedir. Doğa sevgisi, somut güzeller, ayrılık gibi gerçekçi konular işlenir. (Örn: Karacaoğlan, Yunus Emre).</li>
+                            <li><strong>Divan Şiiri:</strong> Saray ve konaklarda, medrese eğitimi almış yüksek zümreye hitap eden yazılı bir edebiyattır. Nazım birimi genellikle beyittir (iki dizelik gruplar). Araplardan alınan ve hecelerin uzunluk-kısaltlığına dayanan Aruz ölçüsü kullanılır. Arapça ve Farsça kelimeler, tamlamalarla doludur; son derece ağır, süslü, sanatlı ve soyut bir dili vardır. Sade bir Türkçe ile yazılması söz konusu dahi değildir! Genellikle kulak için kafiye anlayışıyla ağır ve müzikalitesi yüksek tam/zengin kafiyeler kullanılır. Kalıplaşmış mecazlar (Mazmunlar: Gül ve Bülbül gibi) etrafında döner. (Örn: Fuzuli, Baki, Nedim).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Section 5 -->
+                <div class="mb-4">
+                    <h3 class="text-xl md:text-2xl font-bold text-indigo-700 mb-4 md:mb-6 flex items-center gap-2"><span class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-lg md:text-xl shadow-lg"><i class="fas fa-horse"></i></span>5. BÖLÜM: DESTAN</h3>
+                    <p class="text-gray-700 mb-4">Destan (Epope); milletlerin geçmişinde derin izler bırakan, travmalar veya büyük zaferler yaratan savaş, göç, kuraklık, doğal afet gibi toplumsal olayları anlatan, mitolojik (olağanüstü) unsurlarla bezeli, manzum (şiirsel) yapıtlardır. Milletlerin hafızasıdır.</p>
+                    
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">A. Destanların Genel Özellikleri</h4>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li>Doğal destanlar anonimdirler. İlk olarak kimin söylediği (yazarı) belli değildir.</li>
+                            <li>Manzumdurlar (Sözlü gelenekte şiir şeklinde doğar ve aktarılırlar, sonradan yazıya geçirilirler). Olayların oluşum (çekirdek), kulaktan kulağa yayılma ve yüzyıllar sonra bir araştırmacı tarafından derlenip yazıya geçirilme safhaları vardır.</li>
+                            <li>Millîdirler; o toplumun DNA'sını, inançlarını, yaşam tarzını ve milletin ülküsünü (ideallerini) yansıtırlar. Başka milletlere kopyalanamazlar.</li>
+                            <li>Kahramanlar, mekanlar ve olaylar çoğunlukla doğaüstü (olağanüstü) niteliklerle harmanlanmıştır.</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">B. Destan Kahramanı (Alp / Yiğit Tipi)</h4>
+                        <p class="text-gray-700 mb-3">Bütün destanların kalbinde toplumu kurtaran, ileri taşıyan arketipik bir kahraman (Alp) yatar.</p>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li>Doğuştan olgun, lider doğan ve fizyolojik olarak sıradan insanlardan çok daha devasa, üstün ve güçlü olan karakterlerdir. Bebeklikleri bile mucizevidir (Örn: Oğuz Kağan'ın doğar doğmaz çiğ et istemesi).</li>
+                            <li>Savaşlarda asla yenilmezler, üstünlük göstermeleri zorunludur. Toplumun idealize ettiği erdemleri bünyelerinde toplarlar.</li>
+                            <li>Etrafında onlara akıl veren Bilgeler, görünmez ordular (Kırklar) ve en sadık dostları olan Atları gibi yardımcı motifler yer alır.</li>
+                            <li><strong>Kritik Sınav Detayı:</strong> Kahramanların (Alplerin) kendisi tamamen insandır, etten kemiktendir, ruhani varlıklar değillerdir. Destanlarımızda "ruhani ve kutsal özellik", genellikle gökten bir ışık huzmesiyle inen ve Alp ile evlenen kutsal kadın motifinde görülür.</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card bg-gradient-to-br from-indigo-50 to-purple-50 border-l-4 border-l-indigo-400">
+                        <h4 class="text-lg font-bold text-indigo-800 mb-3">C. Destanlarda At ve Kılavuz Motifleri</h4>
+                        <p class="text-indigo-900 mb-3">Göçebe Türk toplumunda at sadece bir binek hayvanı değil, kahramanın en yakın yoldaşı, sırdaşı ve savaşlardaki ikinci beynidir. Bazen kanatları vardır, bazen dilden anlar. Sınavlarda sıkça eşleştirilmesi istenir:</p>
+                        <ul class="list-disc pl-6 space-y-2 text-indigo-900">
+                            <li><strong>Köroğlu'nun destanındaki o meşhur at:</strong> Kırat (Sudan çıkar ve olağanüstü güçleri vardır).</li>
+                            <li><strong>Battal Gazi'nin atı:</strong> Aşkar</li>
+                            <li><strong>Er Töştük'ün atı:</strong> Çal Kuyruk</li>
+                            <li><strong>Alpamış'ın atı:</strong> Bayçipar</li>
+                            <li><strong>Oğuz Kağan'ın atı:</strong> Alaca At</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-card">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">D. Kutsal ve Şamanist Motifler</h4>
+                        <p class="text-gray-700 mb-3">Eski Türklerin (Şamanizm / Tengricilik) inanç sistemleri destanlara yansımıştır:</p>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li><strong>Işık Motifi:</strong> Destanlarda gökten inen kutsal bir aydınlığı ifade eder. Bu motif, yaratıcının yeryüzüne müdahalesi (Kut inancı) anlamına gelir. Kahramana zor zamanlarında yol gösterir (kılavuzluk eder) ve bazen de (Oğuz Kağan destanında olduğu gibi) kahramanın eşi (evlendiği kutsal dişi varlık) olarak karanlığı yararak gökten ışık huzmesiyle iner.</li>
+                            <li><strong>Ağaç Motifi:</strong> Hayat ağacıdır, evrenin merkezini ve sığınağı temsil eder. Bazen kahramanlar bir ağacın kovuğunda doğar.</li>
+                            <li><strong>Mağara Motifi:</strong> Sığınma, korunma, yeniden doğuş (ana rahmi) ve ilahi vahiy alma yeridir.</li>
+                            <li><strong>Kırklar (Görünmez Güçler):</strong> Kahramana darda kaldığında yardım eden, güç ve onay veren görünmez kutsal rehberlerdir.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: INTERAKTIF TEST -->
+        <div id="tab-quiz" class="hidden animate-fade-in">
+            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-indigo-500 p-4 md:p-6 mb-6 md:mb-8 rounded-r-xl shadow-md">
+                <p class="text-indigo-800 font-bold flex items-center gap-2"><span class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center"><i class="fas fa-graduation-cap text-white"></i></span> Sınav Modu Aktif</p>
+                <p class="text-indigo-700 text-sm mt-2">Yıldızlı sorular önceki sınavlarda çıkmış yüksek olasılıklı sorulardır. Tüm 50 soruyu tamamlayın!</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <span class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full"><i class="fas fa-star text-amber-500 mr-1"></i> 15 Çıkmış Soru</span>
+                    <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full"><i class="fas fa-plus text-indigo-500 mr-1"></i> 35 Ek Soru</span>
+                </div>
+            </div>
+            
+            <div id="quiz-container" class="space-y-8">
+                <!-- Sorular JS ile buraya yüklenecek -->
+            </div>
+        </div>
+
+        <!-- TAB 3: SESLI OZET -->
+        <div id="tab-audio" class="hidden animate-fade-in">
+            <div class="bg-white rounded-xl shadow-sm p-8 text-center border border-gray-100 max-w-2xl mx-auto mt-10">
+                <div class="w-24 h-24 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-microphone-alt text-4xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Yapay Zeka Sesli Özet</h2>
+                <p class="text-gray-600 mb-8">Edebiyat 2 dersi için hazırlanan analizin ve konu özetinin sesli dökümünü aşağıdan dinleyebilirsiniz. Arkanıza yaslanın ve bilgilerin pekişmesine izin verin.</p>
+                
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <audio controls class="w-full focus:outline-none">
+    <source src="edebiyat.mp3" type="audio/mpeg">
+    Tarayıcınız ses oynatıcısını desteklemiyor.
+</audio>
+                    <p class="text-xs text-gray-400 mt-4"><i class="fas fa-info-circle mr-1"></i> Not: Sistem entegrasyonu tamamlandığında ses dosyası otomatik olarak yüklenecektir. (ID: 761cc7ea-9dd3-4c7f-9520-9546632ca1c7)</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-gray-50 to-indigo-50 border-t border-gray-200 py-5 md:py-6 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <i class="fas fa-heart text-red-400"></i>
+                <span class="text-gray-600 text-sm md:text-base">MRS Görkem & MRS Metebey Sınavlarınızda Başarılar Diler Herkese İyi Çalışmalar </span>
+            </div>
+            <p class="text-gray-400 text-xs md:text-sm">&copy; 2026 Türk Dili II İnteraktif Hazırlık Platformu. Başarılar dileriz!</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Uygulama Mantığı -->
+    <script>
+        // --- 1. SEKMELER ARASI GEÇİŞ MANTIĞI ---
+        function switchTab(tabId) {
+            // Butonları güncelle
+            document.querySelectorAll('header button').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-indigo-600');
+                btn.classList.add('text-gray-600');
+            });
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('text-gray-600');
+            activeBtn.classList.add('tab-active', 'text-indigo-600');
+
+            // İçerikleri güncelle
+            ['tab-notes', 'tab-quiz', 'tab-audio'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            const targetTab = document.getElementById('tab-' + tabId);
+            targetTab.classList.remove('hidden');
+            
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- 2. SINAV VERİLERİ (50 SORU) ---
+        const quizData = [
+            // --- FOTOĞRAFLARDAN TEYİT EDİLMİŞ 15 SORU (YILDIZLI) ---
+            {
+                isPastExam: true,
+                q: "Aşağıdaki yazar-eser eşleştirmelerinden hangisi yanlıştır?",
+                options: [
+                    "Halide Edip Adıvar - Sinekli Bakkal",
+                    "Nabizade Nazım - Karabibik",
+                    "Reşat Nuri Güntekin - Dokuzuncu Hariciye Koğuşu",
+                    "Oğuz Atay - Bir Bilim Adamının Romanı",
+                    "İbrahim Şinasi - Şair Evlenmesi"
+                ],
+                answer: 2,
+                rationale: "Dokuzuncu Hariciye Koğuşu, Reşat Nuri Güntekin'in değil Peyami Safa'nın psikolojik şaheseridir."
+            },
+            {
+                isPastExam: true,
+                q: "Destan kahramanları pek çok yerde atlarıyla birlikte anılırlar. Aşağıdaki kahraman - at eşleştirmelerinden hangisi yanlıştır?",
+                options: [
+                    "Köroğlu - Kırat",
+                    "Battal Gazi - Aşkar",
+                    "Er Töştük - Çal Kuyruk",
+                    "Alpamış - Alaca At",
+                    "Edige - Timçavar"
+                ],
+                answer: 3,
+                rationale: "Alpamış'ın atının adı Bayçipar'dır; Alaca At ise Oğuz Kağan'ın atıdır."
+            },
+            {
+                isPastExam: true,
+                q: "Geleneksel Türk Tiyatrosu ile ilgili verilen bilgilerden hangisi yanlıştır?",
+                options: [
+                    "Karagöz oyununda Karagöz tahsil görmüş kimseyi, Hacivat ise okumamış halk adamını temsil eder.",
+                    "Yazılı bir metne dayanmaz doğaçlama oynanır.",
+                    "Meddahlık tek kişilik bir temaşa sanatıdır.",
+                    "Şarkı, türkü, raks oyunların önemli özelliklerindendir.",
+                    "Karagöz oyunları Mukaddime, Muhavere, Fasıl ve Bitiş olmak üzere dört bölümden oluşur."
+                ],
+                answer: 0,
+                rationale: "Tam tersi olmalıdır; Karagöz tahsil görmemiş halk adamı, Hacivat ise medrese kültürüyle yetişmiş okumuş kişidir."
+            },
+            {
+                isPastExam: true,
+                q: "Aşağıdakilerden hangisi dilekçe yazım kurallarından biri değildir?",
+                options: [
+                    "Çizgisiz beyaz bir kâğıda yazılır.",
+                    "Üst makam alt makama yazıyorsa 'arz ederim' ile bitirir.",
+                    "Dilekçe mutlaka tarih, imza ve açık adres içermelidir.",
+                    "Kısaltma kullanılmaz, makam adı büyük harflerle yazılır.",
+                    "Bir şikayet ya da dileği ilgili makamlara bildirmek amacıyla yazılır."
+                ],
+                answer: 1,
+                rationale: "Hiyerarşik kurallara göre; alt makam üst makama 'arz ederim' derken, üst makam alt makama 'rica ederim' der."
+            },
+            {
+                isPastExam: true,
+                q: "Herhangi bir olayın ortaya çıkışını, sonucunu, olay anında ya da olaydan hemen sonra olanları anlatmak için yazılan yazılara ne ad verilir?",
+                options: [
+                    "Öz geçmiş",
+                    "Rapor",
+                    "Bildiri",
+                    "Dilekçe",
+                    "Tutanak"
+                ],
+                answer: 4,
+                rationale: "Olay anını, konuşulanları veya durumu belgelemek için olay tutanağı (zabıt) tutulur."
+            },
+            {
+                isPastExam: true,
+                q: "I. Yazar olayların öncesini, sonrasını bilir.<br>II. Herhangi bir konuda bilgi vermek amacıyla yazılırlar.<br>III. Zaman mantıklı bir sıralama ile verilir.<br>IV. Türk edebiyatındaki en önemli temsilcisi Sait Faik Abasıyanık'tır.<br>Olay (Maupassant) öyküsü ile ilgili verilen bilgilerden hangisi/hangileri yanlıştır?",
+                options: [
+                    "Yalnız I",
+                    "II, IV",
+                    "III, IV",
+                    "I, III",
+                    "I, II, IV"
+                ],
+                answer: 1,
+                rationale: "Olay öyküleri bilgi vermek için değil olay anlatmak için yazılır ve Türk edebiyatındaki en büyük temsilcisi Ömer Seyfettin'dir."
+            },
+            {
+                isPastExam: true,
+                q: "Gazetelerde, dergilerde belli bir köşede yayımlanan, güncel siyasi veya toplumsal olayları ele alan ve kanıtlama amacı gütmeyen yazılardır. Yazar, bu tür yazılarda okuyucuyla sohbet ediyormuş gibi bir üslup kullanır.<br>Parçada sözü edilen yazı türü aşağıdakilerden hangisidir?",
+                options: [
+                    "Makale",
+                    "Fıkra (Köşe yazısı)",
+                    "Deneme",
+                    "Eleştiri",
+                    "Sohbet"
+                ],
+                answer: 1,
+                rationale: "Güncel ve günlük konuları kanıtlama amacı gütmeden yazarın kendi bakış açısıyla anlattığı gazete yazılarına fıkra denir."
+            },
+            {
+                isPastExam: true,
+                q: "1. Doğuştan olgun ve güçlüdürler.<br>2. Fizyolojik bakımdan sıradan insanlardan farksızdırlar.<br>3. Yardımcıları (Kırklar, Bilgeler, Atları vb.) etraflarında yer alır.<br>4. Ruhani bir kişiliğe sahiptirler.<br>5. Savaşlarda üstünlük göstermeleri gerekir.<br>Yukarıda verilen özelliklerden hangileri Türk destanlarındaki 'Alp' tipine ait olamaz?",
+                options: [
+                    "1-2",
+                    "2-4",
+                    "3-5",
+                    "2-3",
+                    "1-4"
+                ],
+                answer: 1,
+                rationale: "Alpler fizyolojik olarak çok üstündürler (sıradan değillerdir) ve insani özelliklere sahiptirler; ruhani özellikler eşlerinde bulunur."
+            },
+            {
+                isPastExam: true,
+                q: "I. Şinasi – Şair Evlenmesi<br>II. Namık Kemal – Vatan Yahut Silistre<br>III. Emin Nihat – Müsameretname<br>IV. Samipaşazade Sezai – Küçük Şeyler<br>Yukarıdaki eşleştirmelerle ilgili verilen bilgilerden hangisi yanlıştır?",
+                options: [
+                    "I. numaralı eser edebiyatımızdaki ilk tiyatro eseridir.",
+                    "II. numaralı eser sahnelenen ilk tiyatrodur.",
+                    "I. ve II. numaralı eserler komedi türüne örnektir.",
+                    "III. numaralı eser edebiyatımızdaki ilk hikâye kitabıdır.",
+                    "IV. numaralı eser Batılı anlamda ilk hikâye kitabıdır."
+                ],
+                answer: 2,
+                rationale: "Şair Evlenmesi komedidir fakat Namık Kemal'in Vatan Yahut Silistre eseri kahramanlık işleyen bir dramdır."
+            },
+            {
+                isPastExam: true,
+                q: "Paragrafta ileri sürülen düşünceyi desteklemek amacıyla, bilimsel ölçüm sonucu ortaya konulmuş sayısal verilerin metin içerisinde kullanılmasına ne ad verilir?",
+                options: [
+                    "Tanımlama",
+                    "Örneklendirme",
+                    "Tanık Gösterme",
+                    "İstatistiksel Verilerden Yararlanma",
+                    "Benzetme"
+                ],
+                answer: 3,
+                rationale: "Sayısal, bilimsel ölçüm sonuçlarının (özellikle % ifadelerinin) argümanı güçlendirmek için kullanılmasıdır."
+            },
+            {
+                isPastExam: true,
+                q: "Aşağıdakilerden hangisi bir öz geçmişte (CV) bulunması gereken temel bölümlerden biri değildir?",
+                options: [
+                    "Kişisel Bilgiler",
+                    "Eğitim Durumu",
+                    "İş Deneyimleri",
+                    "Gelecek Planları ve Hayaller",
+                    "Referanslar"
+                ],
+                answer: 3,
+                rationale: "Öz geçmiş, somut ve geçmişe ait belgelenebilir bilgilere dayanır; hayaller ve soyut planlara yer verilmez."
+            },
+            {
+                isPastExam: true,
+                q: "Makale türü ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?",
+                options: [
+                    "Herhangi bir düşünceyi desteklemek veya savunmak amacıyla yazılır.",
+                    "Nesnel ve bilimsel bir tavırla incelenir.",
+                    "İleri sürülen düşünceyi kanıtlamak için bilimsel belgelerden yararlanılabilir.",
+                    "Makalede ağırlıklı olarak öyküleyici anlatım kullanılır.",
+                    "Kişisel yargılardan uzak durulmalıdır."
+                ],
+                answer: 3,
+                rationale: "Makaleler açıklayıcı ve tartışmacı anlatımlarla yazılır, olay örgüsüne dayalı öyküleyici anlatım asla kullanılmaz."
+            },
+            {
+                isPastExam: true,
+                q: "Mısra sonlarındaki yazılışları, okunuşları ve anlamları aynı olan ses, kelime veya kelime gruplarına ne ad verilir?",
+                options: [
+                    "Redif",
+                    "Yarım Uyak",
+                    "Tam Uyak",
+                    "Zengin Uyak",
+                    "Cinaslı Uyak"
+                ],
+                answer: 0,
+                rationale: "Hem yazılışı hem de görevi/anlamı aynı olan ses ve eklere redif denir."
+            },
+            {
+                isPastExam: true,
+                q: "Hayatın acıklı yönlerini, seyircide korku ve merhamet hisleri uyandırarak ruhu arındırmak amacıyla sahnede göstermek için yazılmış tiyatro türüne ne denir?",
+                options: [
+                    "Komedi",
+                    "Dram",
+                    "Trajedi (Tragedya)",
+                    "Orta Oyunu",
+                    "Meddah"
+                ],
+                answer: 2,
+                rationale: "Trajedi; soylu kahramanların acıklı hikayelerini sahneler, amaç katharsis (arınma) sağlamaktır."
+            },
+            {
+                isPastExam: true,
+                q: "Türk destanlarında gökten inen, kahramanlara yol gösteren, bazen de kahramanların evlendiği kutsal varlıkları temsil eden motif aşağıdakilerden hangisidir?",
+                options: [
+                    "Ağaç",
+                    "Işık",
+                    "Kırklar",
+                    "Mağara",
+                    "Rüya"
+                ],
+                answer: 1,
+                rationale: "Oğuz Kağan Destanı'nda eşinin ışıktan gelmesi, ışık motifinin kutsallığını ve rehberliğini belirtir."
+            },
+
+            // --- YENİ EKLENEN 35 SORU (TÜM KONULARI KAPSAYAN EKSTRA SORULAR) ---
+            {
+                isPastExam: false,
+                q: "Şinasi'nin kaleme aldığı, Batılı anlamda ilk Türk tiyatrosu olarak kabul edilen eser aşağıdakilerden hangisidir?",
+                options: [
+                    "Vatan Yahut Silistre",
+                    "Akif Bey",
+                    "Şair Evlenmesi",
+                    "Zavallı Çocuk",
+                    "Cimri"
+                ],
+                answer: 2,
+                rationale: "Şinasi'nin 'Şair Evlenmesi' adlı eseri, görücü usulü evliliği eleştiren Batılı anlamda ilk tiyatro metnimizdir."
+            },
+            {
+                isPastExam: false,
+                q: "Karagöz ve Hacivat oyununda oyunun perdeye yansıtılmasında kullanılan perdeye verilen özel ad nedir?",
+                options: [
+                    "Küşteri Meydanı",
+                    "Palanga",
+                    "Temaşa",
+                    "Orta Yeri",
+                    "Sahne-i Hayal"
+                ],
+                answer: 0,
+                rationale: "Karagöz oyununun oynatıldığı perdeye, oyunu icat ettiğine inanılan Şeyh Küşteri'nin adına izafeten 'Küşteri Meydanı' denir."
+            },
+            {
+                isPastExam: false,
+                q: "Orta oyununda Karagöz'ün karşılığı olan, cahil görünen ama aslında kurnaz halk adamı karakteri aşağıdakilerden hangisidir?",
+                options: [
+                    "Pişekâr",
+                    "Kavuklu",
+                    "Zenne",
+                    "Beberuhi",
+                    "Çelebi"
+                ],
+                answer: 1,
+                rationale: "Orta oyunundaki Kavuklu karakteri, gölge oyunundaki Karagöz karakterinin özelliklerini taşır."
+            },
+            {
+                isPastExam: false,
+                q: "Yazılı bir metne dayanmadan, sahnede anlık olarak oyuncuların içlerinden geldiği gibi kurguladıkları oyun tarzına ne ad verilir?",
+                options: [
+                    "Trajedi",
+                    "Tuluat (Doğaçlama)",
+                    "Piyes",
+                    "Epik Tiyatro",
+                    "Dram"
+                ],
+                answer: 1,
+                rationale: "Geleneksel tiyatromuzun en temel özelliği olan, yazılı metinsiz ve anlık oynama şekline tuluat (doğaçlama) denir."
+            },
+            {
+                isPastExam: false,
+                q: "Tek kişilik bir gösteri sanatı olan, oyuncunun bir sandalyede oturarak mendil ve baston yardımıyla taklitler yaptığı geleneksel tiyatro türümüz hangisidir?",
+                options: [
+                    "Karagöz",
+                    "Orta Oyunu",
+                    "Köy Seyirlik Oyunları",
+                    "Meddah",
+                    "Kukla"
+                ],
+                answer: 3,
+                rationale: "Meddah, tek kişinin çeşitli karakterleri taklit ederek hikaye anlattığı geleneksel gösteri sanatıdır."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdakilerden hangisi trajedinin özelliklerinden biri değildir?",
+                options: [
+                    "Konusunu mitolojiden veya tarihten alması",
+                    "Kahramanlarının sıradan insanlar (halktan kişiler) olması",
+                    "Vurma, yaralama gibi olayların sahnede gösterilmemesi",
+                    "Üç birlik kuralına (yer, zaman, olay) uyulması",
+                    "Acıma ve korku duyguları uyandırmayı amaçlaması"
+                ],
+                answer: 1,
+                rationale: "Trajedide kahramanlar sıradan insanlar değil; krallar, kraliçeler, tanrılar veya soylu kişilerdir."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdakilerden hangisi olay (Maupassant) öyküsünün özelliklerinden biridir?",
+                options: [
+                    "Merak unsurunun arka planda olması",
+                    "Belli bir olaydan ziyade anlık bir kesit sunması",
+                    "Serim, düğüm ve çözüm bölümlerinin belirgin olması",
+                    "Dünya edebiyatındaki kurucusunun Çehov olması",
+                    "Sonunun okuyucunun hayal gücüne bırakılması"
+                ],
+                answer: 2,
+                rationale: "Olay öyküsü giriş (serim), gelişme (düğüm) ve sonuç (çözüm) planına sıkı sıkıya bağlıdır."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdaki edebî türlerden hangisi Türk edebiyatına Tanzimat Dönemi'nden sonra (Batı etkisiyle) girmemiştir?",
+                options: [
+                    "Roman",
+                    "Makale",
+                    "Modern Tiyatro",
+                    "Fıkra",
+                    "Destan"
+                ],
+                answer: 4,
+                rationale: "Destan, Türk edebiyatının sözlü döneminden beri (İslamiyet öncesi) var olan çok eski bir türdür. Diğerleri Tanzimat ile gelmiştir."
+            },
+            {
+                isPastExam: false,
+                q: "Bir düşünceyi, bir iddiayı kanıtlamak amacıyla, bilimsel ve nesnel veriler kullanılarak yazılan ciddiyet ağırlıklı öğretici metin türü nedir?",
+                options: [
+                    "Fıkra",
+                    "Makale",
+                    "Deneme",
+                    "Söyleşi (Sohbet)",
+                    "Eleştiri"
+                ],
+                answer: 1,
+                rationale: "Kanıtlama amacı taşıyan, bilimsel ve nesnel yazıların genel adı makaledir."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdaki resmi yazışma kurallarından hangisi doğrudur?",
+                options: [
+                    "Dilekçelerde makam adları kısaltılarak yazılabilir.",
+                    "Alt makam üst makama yazarken 'rica ederim' demelidir.",
+                    "Öz geçmişlerde (CV) kişinin gelecek hayallerine geniş yer verilir.",
+                    "Dilekçelerde tarih atılması zorunlu değildir.",
+                    "Vatandaşlar resmi kurumlara yazdıkları dilekçeleri daima 'arz ederim' diyerek bitirir."
+                ],
+                answer: 4,
+                rationale: "Vatandaş resmi kurumun hiyerarşik olarak altında sayıldığı için dilekçesini mutlaka 'arz ederim' ile bitirmelidir."
+            },
+            {
+                isPastExam: false,
+                q: "İslamiyet öncesi Türk destanlarından olan 'Yaratılış Destanı'nda, Tanrı'ya evreni ve insanları yaratması için ilham veren kutsal kadın motifi hangisidir?",
+                options: [
+                    "Banu Çiçek",
+                    "Ak Ana",
+                    "Selcen Hatun",
+                    "Kanıkey",
+                    "Asena"
+                ],
+                answer: 1,
+                rationale: "Yaratılış destanında suyun içinden çıkan ve Tanrı Ülgen'e 'Yarat!' ilhamını veren kutsal figür Ak Ana'dır."
+            },
+            {
+                isPastExam: false,
+                q: "Halk şiirinde dize sonlarında görülen ve sadece tek bir ses (harf) benzerliğine dayanan kafiye türüne ne ad verilir?",
+                options: [
+                    "Tam Kafiye",
+                    "Zengin Kafiye",
+                    "Yarım Kafiye",
+                    "Cinaslı Kafiye",
+                    "Redif"
+                ],
+                answer: 2,
+                rationale: "Tek ses benzerliğine dayanan kafiye çeşidi yarım kafiyedir ve halk şiirinde çok yaygındır."
+            },
+            {
+                isPastExam: false,
+                q: "Divan edebiyatında şairlerin şiirlerini belirli bir düzene göre topladıkları kitaplara ne isim verilir?",
+                options: [
+                    "Cönk",
+                    "Mecmua",
+                    "Mesnevi",
+                    "Divan",
+                    "Tezkire"
+                ],
+                answer: 3,
+                rationale: "Divan şairlerinin eserlerini topladıkları bu defter/kitaplar, döneme ve edebiyata adını veren 'Divan'lardır."
+            },
+            {
+                isPastExam: false,
+                q: "Düşünce yazılarında, ileri sürülen görüşün doğruluğunu kanıtlamak için, o alanda uzman ve bilinen bir kişinin sözünün tırnak içinde aynen aktarılmasına ne denir?",
+                options: [
+                    "Örneklendirme",
+                    "Benzetme",
+                    "Karşılaştırma",
+                    "Tanımlama",
+                    "Tanık Gösterme"
+                ],
+                answer: 4,
+                rationale: "Uzman kişinin sözünü aynen alıntılayarak okuru ikna etme yöntemine tanık gösterme denir."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdakilerden hangisi bir öz geçmiş (CV) türü değildir?",
+                options: [
+                    "Tarihsel (Düz anlatımlı) Öz geçmiş",
+                    "İşlevsel (Sıralamalı) Öz geçmiş",
+                    "Öyküleyici Öz geçmiş",
+                    "Kronolojik Öz geçmiş",
+                    "Performans Odaklı Öz geçmiş"
+                ],
+                answer: 2,
+                rationale: "Öz geçmişlerde somut ve bilgi verici bir anlatım kullanılır, kurgusal bir hikaye gibi 'öyküleyici' öz geçmiş türü yoktur."
+            },
+            {
+                isPastExam: false,
+                q: "Türk edebiyatındaki ilk yerli romanımız aşağıdakilerden hangisidir?",
+                options: [
+                    "İntibah",
+                    "Karabibik",
+                    "Taaşşuk-ı Talat ve Fitnat",
+                    "Aşk-ı Memnu",
+                    "Mai ve Siyah"
+                ],
+                answer: 2,
+                rationale: "Şemsettin Sami'nin yazdığı 'Taaşşuk-ı Talat ve Fitnat', edebiyatımızdaki ilk yerli roman kabul edilir."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdakilerden hangisi edebiyatımızda yazılmış 'ilk köy romanı'dır?",
+                options: [
+                    "Yaban",
+                    "Karabibik",
+                    "Köyün Kamburu",
+                    "İnce Memed",
+                    "Bereketli Topraklar Üzerinde"
+                ],
+                answer: 1,
+                rationale: "Nabizade Nazım'ın kaleme aldığı 'Karabibik', Anadolu köylüsünü ve köy hayatını işleyen ilk romanımızdır."
+            },
+            {
+                isPastExam: false,
+                q: "Yazarın serbest bir konuda, kesin bir kurala veya ispat zorunluluğuna bağlı kalmaksızın, kendi kendine konuşuyormuş gibi içten bir dille yazdığı fikir yazılarına ne denir?",
+                options: [
+                    "Makale",
+                    "Fıkra",
+                    "Söyleşi",
+                    "Deneme",
+                    "Eleştiri"
+                ],
+                answer: 3,
+                rationale: "Kendi kendine konuşur gibi, öznel ve ispatsız yazılan tür denemedir. Dünya edebiyatındaki en büyük ustası Montaigne'dir."
+            },
+            {
+                isPastExam: false,
+                q: "Tiyatro oyunlarında bir karakterin (oyuncunun) sahnede kendi kendine yaptığı veya seyirciye karşı söylediği uzun ve coşkulu konuşmalara ne ad verilir?",
+                options: [
+                    "Diyalog",
+                    "Tirad",
+                    "Suflör",
+                    "Mimik",
+                    "Dekor"
+                ],
+                answer: 1,
+                rationale: "Oyun kişilerinin sahnede söyledikleri uzun, kesintisiz ve coşkulu konuşma bölümlerine tirad denir."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdakilerden hangisi Destan kahramanı olan 'Alp' tipinin özelliklerinden biri olarak sayılamaz?",
+                options: [
+                    "Savaşlarda üstün başarı göstermek.",
+                    "Sıradan, zayıf ve halkın içinden bir fiziğe sahip olmak.",
+                    "Liderlik vasıflarıyla doğmak.",
+                    "Haksızlığa karşı çıkıp aman dileyeni affetmek.",
+                    "Gücünü Tanrı'dan aldığına (Kut) inanmak."
+                ],
+                answer: 1,
+                rationale: "Alpler fizyolojik olarak asla sıradan veya zayıf değillerdir. İri yapılı, devasa ve olağanüstü güçlüdürler."
+            },
+            {
+                isPastExam: false,
+                q: "Divan şiirinde en çok kullanılan, Araplardan edebiyatımıza geçen ve hecelerin uzunluk-kısalığı (açık-kapalı) esasına dayanan ölçü sistemi nedir?",
+                options: [
+                    "Hece Ölçüsü",
+                    "Serbest Ölçü",
+                    "Aruz Ölçüsü",
+                    "Parmak Hesabı",
+                    "Sillabik Ölçü"
+                ],
+                answer: 2,
+                rationale: "Divan edebiyatının temel ritim kalıbı aruz ölçüsüdür."
+            },
+            {
+                isPastExam: false,
+                q: "Tutanak (Zabıt) yazımıyla ilgili aşağıdaki ifadelerden hangisi yanlıştır?",
+                options: [
+                    "Olay anını veya sonrasını belgelemek için yazılır.",
+                    "Tutanağı tutan yetkililerin ve şahitlerin imzası bulunur.",
+                    "Tutanak yazan kişi olaya kendi duygularını ve yorumlarını bolca eklemelidir.",
+                    "Kişisel görüşlere yer verilmez, tamamen nesnel olmalıdır.",
+                    "Sağ üst köşesine mutlaka olay tarihi yazılır."
+                ],
+                answer: 2,
+                rationale: "Tutanak, olayın tıpkı bir fotoğrafı gibi nesneldir; yazanın kişisel duygu ve yorumlarına yer verilmez."
+            },
+            {
+                isPastExam: false,
+                q: "Dünya edebiyatında roman türünün ilk başarılı örneği kabul edilen, Cervantes tarafından kaleme alınan eser hangisidir?",
+                options: [
+                    "Decameron",
+                    "Don Kişot",
+                    "Sefiller",
+                    "Suç ve Ceza",
+                    "İlahi Komedya"
+                ],
+                answer: 1,
+                rationale: "Cervantes'in 'Don Kişot' adlı eseri, modern anlamda dünya edebiyatının ilk başarılı romanı sayılır."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdaki edebî sanat/anlatım biçimlerinden hangisi, bir kavramı okuyucunun gözünde canlandırmak için 'kelimelerle resim çizme' işidir?",
+                options: [
+                    "Öyküleme",
+                    "Açıklama",
+                    "Tartışma",
+                    "Betimleme",
+                    "Kanıtlama"
+                ],
+                answer: 3,
+                rationale: "Betimleme, varlıkların veya mekanların niteliklerini detaylıca anlatarak okurun zihninde bir resim oluşturma (tasvir etme) sanatıdır."
+            },
+            {
+                isPastExam: false,
+                q: "Toplumun eksik ve gülünç yönlerini, insanların zaaflarını eleştirerek seyirciyi hem güldürüp hem düşündürmeyi amaçlayan tiyatro türü nedir?",
+                options: [
+                    "Trajedi",
+                    "Dram",
+                    "Komedi",
+                    "Skeç",
+                    "Pandomim"
+                ],
+                answer: 2,
+                rationale: "İnsanların ve olayların gülünç yönlerini göstererek ders vermeyi amaçlayan tür komedidir."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdakilerden hangisi Halk Şiirinin özelliklerinden biri değildir?",
+                options: [
+                    "Şiirler 'dörtlük' adı verilen nazım birimiyle yazılır.",
+                    "Arapça ve Farsça kelimelerle dolu çok ağır bir dil kullanılır.",
+                    "Milli ölçümüz olan hece ölçüsü tercih edilir.",
+                    "Aşk, doğa, ayrılık gibi somut ve yaşamsal konular işlenir.",
+                    "Şiirler genellikle bağlama (saz) eşliğinde sözlü olarak üretilir."
+                ],
+                answer: 1,
+                rationale: "Ağır, Arapça/Farsça kelimelerle dolu olan dil Divan Şiirinin özelliğidir. Halk şiirinde saf ve sade Türkçe kullanılır."
+            },
+            {
+                isPastExam: false,
+                q: "Oğuz Kağan Destanı'nda kahramana kılavuzluk eden, ordusunun önünde yürüyen ve ışıktan doğduğuna inanılan mitolojik hayvan motifi hangisidir?",
+                options: [
+                    "Aslan",
+                    "Geyik",
+                    "Kurt (Börteçine)",
+                    "Kartal",
+                    "At"
+                ],
+                answer: 2,
+                rationale: "Oğuz Kağan Destanı'nda ve genel Türk mitolojisinde orduya yol gösteren kılavuz hayvan gök yeleli kurt (Bozkurt) motifidir."
+            },
+            {
+                isPastExam: false,
+                q: "Sanat, edebiyat veya düşünce alanındaki bir eseri; iyi ve kötü (olumlu ve olumsuz) yönleriyle değerlendirip onun gerçek değerini ortaya koymak amacıyla yazılan yazılara ne denir?",
+                options: [
+                    "Makale",
+                    "Röportaj",
+                    "Eleştiri (Tenkit)",
+                    "Biyografi",
+                    "Deneme"
+                ],
+                answer: 2,
+                rationale: "Bir eserin değerli ve değersiz yanlarını inceleyen, sanatçıya ve okura yol gösteren yazı türü eleştiridir."
+            },
+            {
+                isPastExam: false,
+                q: "Büyük savaşlar, göçler, kıtlık gibi toplumun derinden sarsıldığı olayların, yıllar içinde dilden dile aktarılarak ve olağanüstü özellikler eklenerek oluşturduğu anonim metinlere ne denir?",
+                options: [
+                    "Masal",
+                    "Doğal Destan",
+                    "Yapay Destan",
+                    "Efsane",
+                    "Halk Hikâyesi"
+                ],
+                answer: 1,
+                rationale: "Toplumsal travmaların veya büyük zaferlerin halk arasında kendiliğinden destanlaşmasıyla 'Doğal Destanlar' oluşur."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdakilerden hangisi Batı edebiyatından dilimize giren tiyatro (Göstermeye Bağlı) türlerinden biri değildir?",
+                options: [
+                    "Trajedi",
+                    "Komedi",
+                    "Dram",
+                    "Orta Oyunu",
+                    "Opera"
+                ],
+                answer: 3,
+                rationale: "Orta Oyunu, Batı'dan alınmamıştır; Geleneksel Türk Tiyatromuzun özgün ve yerli bir parçasıdır."
+            },
+            {
+                isPastExam: false,
+                q: "Bir kimsenin kendi hayatını, yaşadığı dönemi ve tecrübelerini kendisinin kaleme aldığı edebî türe ne ad verilir?",
+                options: [
+                    "Biyografi (Yaşamöyküsü)",
+                    "Otobiyografi (Özyaşamöyküsü)",
+                    "Anı (Hatıra)",
+                    "Günlük (Günce)",
+                    "Gezi Yazısı (Seyahatname)"
+                ],
+                answer: 1,
+                rationale: "Yazarın kendi hayat hikayesini birinci tekil şahıs (ben) ağzıyla anlattığı eserlere otobiyografi denir."
+            },
+            {
+                isPastExam: false,
+                q: "Bilimsel, akademik bir toplantıda (sempozyum/kongre), bir uzman tarafından dinleyicilere sunulmak üzere hazırlanan ve tartışmaya açılan bilimsel tebliğlere ne denir?",
+                options: [
+                    "Bildiri",
+                    "Rapor",
+                    "Tutanak",
+                    "Makale",
+                    "Öz geçmiş"
+                ],
+                answer: 0,
+                rationale: "Akademik toplantılarda sunulan bilimsel araştırmalara bildiri veya tebliğ denir."
+            },
+            {
+                isPastExam: false,
+                q: "Aşağıdakilerden hangisi bir paragrafın 'giriş cümlesi' olmaya uygun DEĞİLDİR?",
+                options: [
+                    "Roman, insan yaşamını detaylarıyla anlatan uzun bir anlatı türüdür.",
+                    "Edebiyat, toplumun aynası olma görevini yüzyıllardır sürdürüyor.",
+                    "İşte bu yüzden, yazarın anlattığı hikaye inandırıcılığını tamamen yitirmiştir.",
+                    "Şiir okumak, insanın iç dünyasına yaptığı en güzel yolculuktur.",
+                    "Sanat eserleri, bulundukları çağın özelliklerinden bağımsız düşünülemez."
+                ],
+                answer: 2,
+                rationale: "'İşte bu yüzden...' ifadesi, kendisinden önce başka cümleler (bir sebep) söylendiğini gösterir. Bu nedenle bir metnin ilk cümlesi olamaz."
+            },
+            {
+                isPastExam: false,
+                q: "Karagöz gölge oyununda, Hacivat ile Karagöz'ün sahneye ilk çıkıp birbirleriyle kalıplaşmış sözlerle tartıştıkları/atıştıkları ikinci bölüme ne ad verilir?",
+                options: [
+                    "Mukaddime (Giriş)",
+                    "Fasıl (Asıl Oyun)",
+                    "Bitiş",
+                    "Muhavere (Söyleşme/Atışma)",
+                    "Ara Oyun"
+                ],
+                answer: 3,
+                rationale: "Karagöz ve Hacivat'ın hünerlerini sergiledikleri, yanlış anlamalara dayalı atışma bölümü 'Muhavere'dir."
+            },
+            {
+                isPastExam: false,
+                q: "Bir eserdeki kahramanın dış görünüşünün (boyu, göz rengi, kıyafetleri) kelimelerle detaylı bir şekilde anlatılmasına ne ad verilir?",
+                options: [
+                    "Ruhsal Betimleme",
+                    "İzlenimsel Betimleme",
+                    "Fiziksel Betimleme (Portre)",
+                    "Açıklayıcı Betimleme",
+                    "Öyküleyici Anlatım"
+                ],
+                answer: 2,
+                rationale: "Kişinin dış özelliklerinin, fiziksel niteliklerinin anlatıldığı betimleme türü fiziksel betimlemedir (fiziksel portre)."
+            }
+        ];
+
+        // --- 3. TESTİ RENDER ETME VE ETKİLEŞİM ---
+        const quizContainer = document.getElementById('quiz-container');
+        
+        quizData.forEach((item, qIndex) => {
+            // Soru kartı oluştur
+            const card = document.createElement('div');
+            card.className = "quiz-card bg-white p-5 md:p-8 rounded-2xl shadow-md border border-gray-100 mb-4 md:mb-6";
+            
+            // Eğer çıkmış soru ise rozet ekle
+            if (item.isPastExam) {
+                const badge = document.createElement('div');
+                badge.className = "past-exam-badge";
+                badge.innerHTML = '<i class="fas fa-star mr-1"></i> Çıkmış Soru';
+                card.appendChild(badge);
+            }
+            
+            // Soru Başlığı
+            const questionTitle = document.createElement('h3');
+            questionTitle.className = "text-base md:text-lg font-bold text-gray-800 mb-4 md:mb-5 mt-2 leading-relaxed";
+            questionTitle.innerHTML = `<span class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-lg text-sm font-bold mr-2 md:mr-3">${qIndex + 1}</span> ${item.q}`;
+            card.appendChild(questionTitle);
+            
+            // Şıklar Container
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = "space-y-2 md:space-y-3";
+            optionsDiv.id = `options-container-${qIndex}`;
+            
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            
+            item.options.forEach((opt, oIndex) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left px-4 md:px-5 py-3 md:py-4 rounded-xl border-2 border-gray-100 text-gray-700 font-medium hover:border-indigo-300 focus:outline-none text-sm md:text-base";
+                btn.innerHTML = `<span class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 bg-gray-100 rounded-lg text-xs md:text-sm font-bold mr-2 md:mr-3 text-gray-600">${letters[oIndex]}</span> <span class="flex-1">${opt}</span>`;
+                
+                // Tıklama Olayı
+                btn.onclick = () => handleAnswer(qIndex, oIndex, btn, item.answer, item.rationale);
+                
+                optionsDiv.appendChild(btn);
+            });
+            card.appendChild(optionsDiv);
+            
+            // Açıklama Alanı (Başlangıçta gizli)
+            const rationaleDiv = document.createElement('div');
+            rationaleDiv.id = `rationale-${qIndex}`;
+            rationaleDiv.className = "hidden mt-5 md:mt-6 p-4 md:p-5 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-800 text-sm md:text-base font-medium border border-indigo-100";
+            card.appendChild(rationaleDiv);
+            
+            quizContainer.appendChild(card);
+        });
+
+        function handleAnswer(qIndex, selectedOptionIndex, clickedBtn, correctIndex, rationaleText) {
+            const container = document.getElementById(`options-container-${qIndex}`);
+            const buttons = container.querySelectorAll('button');
+            const rationaleDiv = document.getElementById(`rationale-${qIndex}`);
+            
+            // Tüm butonları devre dışı bırak
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-indigo-300', 'option-btn');
+                
+                // Doğru cevabı yeşil yap
+                if (index === correctIndex) {
+                    btn.classList.add('correct-answer');
+                    btn.innerHTML = btn.innerHTML.replace(/<span class="inline-flex[^"]*">.*?<\/span>/, '<span class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 bg-green-500 text-white rounded-lg text-xs md:text-sm font-bold mr-2 md:mr-3"><i class="fas fa-check"></i></span>');
+                    btn.innerHTML += ' <i class="fas fa-check-circle text-green-600 float-right text-xl mt-0.5"></i>';
+                }
+            });
+            
+            // Eğer yanlış seçildiyse onu kırmızı yap
+            if (selectedOptionIndex !== correctIndex) {
+                clickedBtn.classList.add('wrong-answer');
+                clickedBtn.innerHTML = clickedBtn.innerHTML.replace(/<span class="inline-flex[^"]*">.*?<\/span>/, '<span class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 bg-red-500 text-white rounded-lg text-xs md:text-sm font-bold mr-2 md:mr-3"><i class="fas fa-times"></i></span>');
+                clickedBtn.innerHTML += ' <i class="fas fa-times-circle text-red-500 float-right text-xl mt-0.5"></i>';
+                rationaleDiv.innerHTML = `<div class="flex items-start gap-3"><i class="fas fa-exclamation-circle text-2xl text-red-400 flex-shrink-0 mt-0.5"></i><div><strong class="text-red-600">Yanlış Cevap</strong><p class="mt-2 text-red-700"><strong>Açıklama:</strong> ${rationaleText}</p></div></div>`;
+                rationaleDiv.className = rationaleDiv.className.replace(/from-indigo-50|to-purple-50/, 'from-red-50');
+                rationaleDiv.className = rationaleDiv.className.replace(/text-indigo-800|border-indigo-100/, 'text-red-800 border-red-100');
+            } else {
+                rationaleDiv.innerHTML = `<div class="flex items-start gap-3"><i class="fas fa-trophy text-2xl text-yellow-500 flex-shrink-0 mt-0.5"></i><div><strong class="text-green-600">Harika! Doğru Cevap!</strong><p class="mt-2 text-green-700"><strong>Açıklama:</strong> ${rationaleText}</p></div></div>`;
+                rationaleDiv.className = rationaleDiv.className.replace(/from-indigo-50|to-purple-50/, 'from-green-50');
+                rationaleDiv.className = rationaleDiv.className.replace(/text-indigo-800|border-indigo-100/, 'text-green-800 border-green-100');
+            }
+            
+            // Açıklamayı göster
+            rationaleDiv.classList.remove('hidden');
+            rationaleDiv.classList.add('animate-fade-in');
+        }
+
+    </script>
+</body>
+</html>
